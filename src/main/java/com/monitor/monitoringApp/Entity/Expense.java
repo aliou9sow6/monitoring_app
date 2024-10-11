@@ -24,5 +24,5 @@ public class Expense {
 
     private LocalDate date;
 
-    private Integer amount;
+    private Double amount;
 }

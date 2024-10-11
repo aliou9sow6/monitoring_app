@@ -1,6 +1,7 @@
 package com.monitor.monitoringApp.service.serviceImpl;
 
 import com.monitor.monitoringApp.Entity.Expense;
+import com.monitor.monitoringApp.Entity.Income;
 import com.monitor.monitoringApp.Repositry.ExpenseRepository;
 import com.monitor.monitoringApp.dto.ExpenseDto;
 import com.monitor.monitoringApp.service.ExpenseService;
@@ -10,8 +11,10 @@ import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +37,9 @@ public class ExpenseServiceImpl implements ExpenseService {
     }
 
     public List<Expense> getAllExpenses() {
-        return expenseRepository.findAll().stream().toList();
+        return expenseRepository.findAll().stream()
+                .sorted(Comparator.comparing(Expense::getDate).reversed())
+                .collect(Collectors.toList());
     }
 
     public Expense getExpenseById(Long id) {

@@ -10,16 +10,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
-@RequestMapping("/v1/api")
+@RequestMapping("/v1/api/expense")
 @RequiredArgsConstructor
 @CrossOrigin("*")
 public class ExpenseController {
 
     private final ExpenseService expenseService;
-    private final ExpenseRepository expenseRepository;
 
     @PostMapping()
     public ResponseEntity<?> postExpense(@RequestBody ExpenseDto expenseDto) {
@@ -31,7 +28,7 @@ public class ExpenseController {
         }
     }
 
-    @GetMapping("/all")
+    @GetMapping()
     public ResponseEntity<?> getAllExpenses() {
         return ResponseEntity.ok(expenseService.getAllExpenses());
     }
@@ -49,7 +46,7 @@ public class ExpenseController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateExpense(@PathVariable Long id, ExpenseDto expenseDto) {
+    public ResponseEntity<?> updateExpense(@PathVariable Long id, @RequestBody ExpenseDto expenseDto) {
         try {
             return ResponseEntity.ok(expenseService.updateExpense(id, expenseDto));
         } catch (EntityNotFoundException e) {
