@@ -7,6 +7,7 @@ import com.monitor.monitoringApp.service.IncomeService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.Comparator;
 import java.util.List;
@@ -55,16 +56,21 @@ public class IncomeServiceImpl implements IncomeService {
         }
     }
 
-    public Income getIncomeById(Long id) {
+    public IncomeDto getIncomeById(Long id) {
         Optional<Income> optionalIncome = incomeRepository.findById(id);
         if(optionalIncome.isPresent()) {
-            return optionalIncome.get();
+            return optionalIncome.get().getIncomeDto();
         } else {
             throw new EntityNotFoundException("Income is not present with id " + id);
         }
     }
 
-    public void deleteIncomeById(Long id) {
-        incomeRepository.deleteById(id);
+    public void deleteIncomeById(@PathVariable Long id) {
+        Optional<Income> optionalIncome = incomeRepository.findById(id);
+        if(optionalIncome.isPresent()) {
+            incomeRepository.delete(optionalIncome.get());
+        }  else {
+            throw new EntityNotFoundException("Income is not present with id " + id);
+        }
     }
 }

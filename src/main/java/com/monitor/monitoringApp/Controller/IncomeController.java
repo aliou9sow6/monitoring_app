@@ -4,13 +4,10 @@ import com.monitor.monitoringApp.Entity.Income;
 import com.monitor.monitoringApp.dto.IncomeDto;
 import com.monitor.monitoringApp.service.IncomeService;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/v1/api/income")
@@ -23,7 +20,6 @@ public class IncomeController {
     @PostMapping()
     public ResponseEntity<?> postIncome(@RequestBody IncomeDto incomeDto){
         Income createIncome = incomeService.postIncome(incomeDto);
-
         if (createIncome != null){
             return  ResponseEntity.status(HttpStatus.CREATED).body(createIncome);
         }else {
@@ -57,8 +53,16 @@ public class IncomeController {
             return  ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong");
         }
     }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteIncome(@PathVariable Long id){
+        try {
+            incomeService.deleteIncomeById(id);
+            return ResponseEntity.ok("-----id "+ id +" delete successful------");
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong");
+        }
+    }
 
-    /*public ResponseEntity<?> deleteIncome(@PathVariable Long id){
-        return incomeService.deleteIncomeById(id);
-    }*/
 }
